@@ -1,4 +1,4 @@
-FROM java:17
+FROM openjdk:17-alpine
 ENV TZ=Asia/Shanghai
 ENV LOG_HOME=/data/applogs
 ADD home-education-tools-0.0.1-SNAPSHOT.jar /data/application/
