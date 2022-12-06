@@ -15,6 +15,7 @@
 	<description>some tools for home education</description>
 	<properties>
 		<java.version>17</java.version>
+		<baidu.ocr.version>4.16.12</baidu.ocr.version>
 	</properties>
 	<dependencies>
 
@@ -44,6 +45,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<!-- ocr -->
+		<dependency>
+			<groupId>com.baidu.aip</groupId>
+			<artifactId>java-sdk</artifactId>
+			<version>${baidu.ocr.version}</version>
 		</dependency>
 	</dependencies>
 
