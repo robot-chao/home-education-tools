@@ -31,6 +31,7 @@ public class WechatServer {
     @RequestMapping("/dispatcher")
     public Object dispatcher(HttpServletRequest request, @RequestBody String msg) {
         if (!isFromWechatServer(request)) {
+            log.info("error");
             return "error";
         }
 
@@ -54,6 +55,7 @@ public class WechatServer {
 
         String[] params = new String[] {this.wechatServerToken, timestamp, nonce};
         Arrays.sort(params);
+        log.info("params: {}, sign: {}", Arrays.toString(params), signature);
         String sha1 = DigestUtils.sha1Hex(StringUtils.join(params, ""));
 
         return StringUtils.equals(signature, sha1);
