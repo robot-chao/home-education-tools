@@ -1,6 +1,7 @@
 package cn.luckypapa.homeeducation.tools.arithmetic;
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/arithmetic")
+@Slf4j
 public class ArithmeticController {
 
     @Autowired
