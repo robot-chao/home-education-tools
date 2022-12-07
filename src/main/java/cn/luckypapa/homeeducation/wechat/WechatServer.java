@@ -29,7 +29,7 @@ public class WechatServer {
     private IWechatCallbackService wechatCallbackService;
 
     @RequestMapping("/dispatcher")
-    public Object dispatcher(HttpServletRequest request, @RequestBody String msg) {
+    public Object dispatcher(HttpServletRequest request, @RequestBody(required = false) String msg) {
         if (!isFromWechatServer(request)) {
             log.info("error");
             return "error";
