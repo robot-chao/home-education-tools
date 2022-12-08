@@ -1,5 +1,6 @@
 package cn.luckypapa.homeeducation.wechat;
 
+import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
@@ -24,6 +25,7 @@ import java.util.List;
  *   </Articles>
  * </xml>
  */
+@Slf4j
 public class WechatNewsResponse extends WechatResponse {
 
     private List<ArticleItem> articles = new ArrayList<>();
@@ -46,7 +48,11 @@ public class WechatNewsResponse extends WechatResponse {
             articleItem.add2Element(articlesElement);
         }
 
-        return xmlDoc.asXML();
+        String payload = xmlDoc.asXML();
+
+        log.info("payload: {}", payload);
+
+        return payload;
     }
 
     class ArticleItem {
