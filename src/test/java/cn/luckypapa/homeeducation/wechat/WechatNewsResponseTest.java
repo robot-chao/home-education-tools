@@ -21,6 +21,6 @@ class WechatNewsResponseTest {
         assertTrue(xml.contains("</CreateTime>"));
         assertTrue(xml.contains("<MsgType><![CDATA[news]]></MsgType>"));
         assertTrue(xml.contains("<ArticleCount>1</ArticleCount>"));
-        assertTrue(xml.contains("<Articles><Item><Title><![CDATA[Welcome!]]></Title><Description><![CDATA[Hello!]]></Description><PicUrl><![CDATA[pic]]></PicUrl><Url><![CDATA[url]]></Url></Item></Articles>"));
+        assertTrue(xml.contains("<Articles><item><Title><![CDATA[Welcome!]]></Title><Description><![CDATA[Hello!]]></Description><PicUrl><![CDATA[pic]]></PicUrl><Url><![CDATA[url]]></Url></item></Articles>"));
     }
 }
