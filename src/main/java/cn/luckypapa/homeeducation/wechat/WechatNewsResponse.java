@@ -69,7 +69,7 @@ public class WechatNewsResponse extends WechatResponse {
         }
 
         public void add2Element(Element articlesElement) {
-            Element itemElement = articlesElement.addElement("Item");
+            Element itemElement = articlesElement.addElement("item");
             itemElement.addElement("Title").addCDATA(title);
             itemElement.addElement("Description").addCDATA(description);
             itemElement.addElement("PicUrl").addCDATA(picUrl);
