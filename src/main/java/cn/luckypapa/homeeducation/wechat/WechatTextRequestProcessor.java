@@ -26,8 +26,8 @@ public class WechatTextRequestProcessor extends WechatRequestProcessor {
                     educationDomain + PATH_ARITHMETIC);
 
             return wechatNewsResponse;
+        } else {
+            return new WechatTextResponse(wechatRequest.getFromUserName(), wechatRequest.getToUserName(), "Welcome!");
         }
-
-        return new WechatNonPayloadResponse();
     }
 }
