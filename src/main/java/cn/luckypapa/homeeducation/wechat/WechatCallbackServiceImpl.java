@@ -10,6 +10,15 @@ public class WechatCallbackServiceImpl implements IWechatCallbackService{
     @Override
     public String doCallback(String msg) {
         log.info("接收到微信消息：{}", msg);
-        return "success";
+        WechatRequest wechatRequest = WechatRequest.parseRequest(msg);
+        return process(wechatRequest);
+    }
+
+    private String process(WechatRequest wechatRequest) {
+        return getProcessor(wechatRequest).process(wechatRequest).payload();
+    }
+
+    private WechatRequestProcessor getProcessor(WechatRequest wechatRequest) {
+        return WechatRequestProcessor.getProcessor(wechatRequest.getMsgType());
     }
 }
