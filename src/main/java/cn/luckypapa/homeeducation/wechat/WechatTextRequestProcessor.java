@@ -10,6 +10,8 @@ public class WechatTextRequestProcessor extends WechatRequestProcessor {
 
     @Value("${domain.education}")
     private String educationDomain;
+    @Value("${wechat.news.picUrl}")
+    private String newsPicUrl;
 
     @Override
     protected WechatRequestTypeEnum getSupportMsgType() {
@@ -22,7 +24,7 @@ public class WechatTextRequestProcessor extends WechatRequestProcessor {
         if ("四则运算".equals(wechatTextRequest.getContent())) {
             WechatNewsResponse wechatNewsResponse = new WechatNewsResponse(
                     wechatRequest.getFromUserName(), wechatRequest.getToUserName());
-            wechatNewsResponse.addArticleItem("点击获取四则运算试卷", "点击获取四则运算试卷", "",
+            wechatNewsResponse.addArticleItem("点击获取四则运算试卷", "点击获取四则运算试卷", newsPicUrl,
                     educationDomain + PATH_ARITHMETIC);
 
             return wechatNewsResponse;
