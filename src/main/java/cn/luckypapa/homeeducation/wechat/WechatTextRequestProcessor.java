@@ -29,7 +29,8 @@ public class WechatTextRequestProcessor extends WechatRequestProcessor {
 
             return wechatNewsResponse;
         } else {
-            return new WechatTextResponse(wechatRequest.getFromUserName(), wechatRequest.getToUserName(), "Welcome!");
+            return new WechatTextResponse(wechatRequest.getFromUserName(), wechatRequest.getToUserName(),
+                    "Welcome!\n回复“四则运算”获取四则运算试卷。");
         }
     }
 }
