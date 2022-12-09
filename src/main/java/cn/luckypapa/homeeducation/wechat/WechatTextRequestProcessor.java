@@ -1,17 +1,15 @@
 package cn.luckypapa.homeeducation.wechat;
 
-import org.springframework.beans.factory.annotation.Value;
+import cn.luckypapa.homeeducation.wechat.dao.WechatResponseEntity;
+import cn.luckypapa.homeeducation.wechat.dao.WechatResponseJpaRepository;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 @Component
 public class WechatTextRequestProcessor extends WechatRequestProcessor {
 
-    public static final String PATH_ARITHMETIC = "/arithmetic/generate?opCount=3&itemCount=20";
-
-    @Value("${domain.education}")
-    private String educationDomain;
-    @Value("${wechat.news.picUrl}")
-    private String newsPicUrl;
+    @Resource
+    private WechatResponseJpaRepository wechatResponseJpaRepository;
 
     @Override
     protected WechatRequestTypeEnum getSupportMsgType() {
@@ -21,16 +19,35 @@ public class WechatTextRequestProcessor extends WechatRequestProcessor {
     @Override
     public WechatResponse process(WechatRequest wechatRequest) {
         WechatTextRequest wechatTextRequest = (WechatTextRequest) wechatRequest;
-        if ("四则运算".equals(wechatTextRequest.getContent())) {
+
+        WechatResponseEntity wechatResponseEntity = getResponseByUserMsg(wechatTextRequest);
+
+        if (null == wechatResponseEntity) {
+            return getDefaultResponse(wechatRequest);
+        }
+
+        if ("news".equals(wechatResponseEntity.getResponseType())) {
             WechatNewsResponse wechatNewsResponse = new WechatNewsResponse(
                     wechatRequest.getFromUserName(), wechatRequest.getToUserName());
-            wechatNewsResponse.addArticleItem("点击获取四则运算试卷", "点击获取四则运算试卷", newsPicUrl,
-                    educationDomain + PATH_ARITHMETIC);
+            wechatNewsResponse.addArticleItem(wechatResponseEntity.getTitle(),
+                    wechatResponseEntity.getDescription(), wechatResponseEntity.getPicUrl(),
+                    wechatResponseEntity.getUrl());
 
             return wechatNewsResponse;
         } else {
             return new WechatTextResponse(wechatRequest.getFromUserName(), wechatRequest.getToUserName(),
-                    "Welcome!\n回复“四则运算”获取四则运算试卷。");
+                    wechatResponseEntity.getContent());
         }
+    }
+
+    private WechatResponse getDefaultResponse(WechatRequest wechatRequest) {
+        return new WechatTextResponse(wechatRequest.getFromUserName(), wechatRequest.getToUserName(),
+                "Welcome!\n回复“四则运算”获取四则运算试卷。");
+    }
+
+    private WechatResponseEntity getResponseByUserMsg(WechatTextRequest wechatTextRequest) {
+        WechatResponseEntity condition = new WechatResponseEntity();
+        condition.setUserMsg(wechatTextRequest.getContent());
+        return wechatResponseJpaRepository.getByUserMsg(wechatTextRequest.getContent());
     }
 }
