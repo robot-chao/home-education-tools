@@ -1,4 +1,4 @@
-package cn.luckypapa.homeeducation.wechat;
+package cn.luckypapa.homeeducation.wechat.response;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;

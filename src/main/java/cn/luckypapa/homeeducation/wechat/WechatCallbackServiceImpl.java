@@ -1,5 +1,7 @@
 package cn.luckypapa.homeeducation.wechat;
 
+import cn.luckypapa.homeeducation.wechat.processor.WechatRequestProcessor;
+import cn.luckypapa.homeeducation.wechat.request.WechatRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

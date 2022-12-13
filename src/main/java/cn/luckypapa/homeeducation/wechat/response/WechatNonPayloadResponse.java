@@ -1,4 +1,4 @@
-package cn.luckypapa.homeeducation.wechat;
+package cn.luckypapa.homeeducation.wechat.response;
 
 /**
  * 无内容响应

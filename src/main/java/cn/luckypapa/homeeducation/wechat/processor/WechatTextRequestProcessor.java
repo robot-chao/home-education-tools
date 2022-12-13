@@ -1,7 +1,13 @@
-package cn.luckypapa.homeeducation.wechat;
+package cn.luckypapa.homeeducation.wechat.processor;
 
+import cn.luckypapa.homeeducation.wechat.request.WechatRequestTypeEnum;
 import cn.luckypapa.homeeducation.wechat.dao.WechatResponseEntity;
 import cn.luckypapa.homeeducation.wechat.dao.WechatResponseJpaRepository;
+import cn.luckypapa.homeeducation.wechat.request.WechatRequest;
+import cn.luckypapa.homeeducation.wechat.request.WechatTextRequest;
+import cn.luckypapa.homeeducation.wechat.response.WechatNewsResponse;
+import cn.luckypapa.homeeducation.wechat.response.WechatResponse;
+import cn.luckypapa.homeeducation.wechat.response.WechatTextResponse;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 

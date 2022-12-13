@@ -1,4 +1,4 @@
-package cn.luckypapa.homeeducation.wechat;
+package cn.luckypapa.homeeducation.wechat.request;
 
 import lombok.Getter;
 import org.dom4j.Document;

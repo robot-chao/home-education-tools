@@ -1,4 +1,4 @@
-package cn.luckypapa.homeeducation.wechat;
+package cn.luckypapa.homeeducation.wechat.request;
 
 public enum WechatRequestTypeEnum {
     TEXT("text"), IMAGE("image");
