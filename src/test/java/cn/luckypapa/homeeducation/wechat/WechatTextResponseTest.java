@@ -1,5 +1,6 @@
 package cn.luckypapa.homeeducation.wechat;
 
+import cn.luckypapa.homeeducation.wechat.response.WechatTextResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 

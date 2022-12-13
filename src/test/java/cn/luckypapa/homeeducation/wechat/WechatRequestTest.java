@@ -1,5 +1,8 @@
 package cn.luckypapa.homeeducation.wechat;
 
+import cn.luckypapa.homeeducation.wechat.request.WechatImageRequest;
+import cn.luckypapa.homeeducation.wechat.request.WechatRequest;
+import cn.luckypapa.homeeducation.wechat.request.WechatTextRequest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
