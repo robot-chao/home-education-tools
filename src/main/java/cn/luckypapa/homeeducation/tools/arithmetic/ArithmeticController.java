@@ -1,5 +1,6 @@
 package cn.luckypapa.homeeducation.tools.arithmetic;
 
+import cn.luckypapa.homeeducation.utils.PythonRunner;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.*;
@@ -63,5 +64,10 @@ public class ArithmeticController {
         response.flushBuffer();
         workbook.write(response.getOutputStream());
         workbook.close();
+    }
+
+    @RequestMapping("/generate2")
+    public Object generate2(HttpServletResponse response) throws Exception {
+        return new PythonRunner().exec("/data/application/python/hello.py");
     }
 }
