@@ -68,6 +68,7 @@ public class ArithmeticController {
 
     @RequestMapping("/generate2")
     public Object generate2(HttpServletResponse response) throws Exception {
+        log.info("run python");
         return new PythonRunner().exec("/data/application/python/hello.py");
     }
 }
