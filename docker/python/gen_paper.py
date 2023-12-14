@@ -27,7 +27,7 @@ if paperType == '1':
 elif paperType == '2':
     path += "10以内连加连减V2"
     genPaper(path=path, onlyResult=False)
-elif paperType = '3':
+elif paperType == '3':
     path += "20以内连加连减"
     genPaper(path=path, max=20, min=5, onlyResult=True)
 
