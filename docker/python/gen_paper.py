@@ -17,8 +17,18 @@ def genPaper(itemCountPerPaper=30, paperCount=2, path="", opNum=2, max=10, min=5
     paperSheet.page_margins.bottom=0.8
     paperBook.save(path + '.xlsx')
 
-print(sys.argv)
 
-genPaper(path="/data/application/excel/10以内连加连减")
-genPaper(path="/data/application/excel/10以内连加连减V2", onlyResult=False)
-genPaper(path="/data/application/excel/20以内连加连减", max=20, min=5, onlyResult=True)
+path = sys.argv[1]
+paperType = sys.argv[2]
+
+if paperType == '1':
+    path += "10以内连加连减"
+    genPaper(path)
+elif paperType == '2':
+    path += "10以内连加连减V2"
+    genPaper(path=path, onlyResult=False)
+elif paperType = '3':
+    path += "20以内连加连减"
+    genPaper(path=path, max=20, min=5, onlyResult=True)
+
+print(path)

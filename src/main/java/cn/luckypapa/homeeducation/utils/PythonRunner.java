@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 @Slf4j
 public class PythonRunner {
 
-    public Object exec(String pythonFile, String[] args) {
+    public String exec(String pythonFile, String[] args) {
         String[] cmd = new String[]{"python3", pythonFile};
         Process process = null;
         try {
@@ -33,6 +33,7 @@ public class PythonRunner {
             process.waitFor();
             log.info("inputstream: {}", inBuilder.toString());
             log.info("errorstream: {}", errorBuilder.toString());
+            return inBuilder.toString();
         } catch (IOException e) {
             log.info("exec python error", e);
             throw new RuntimeException(e);
@@ -40,7 +41,5 @@ public class PythonRunner {
             log.info("exec python error", e);
             throw new RuntimeException(e);
         }
-
-        return "success";
     }
 }

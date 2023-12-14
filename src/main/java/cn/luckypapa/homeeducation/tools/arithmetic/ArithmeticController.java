@@ -3,20 +3,25 @@ package cn.luckypapa.homeeducation.tools.arithmetic;
 import cn.luckypapa.homeeducation.utils.PythonRunner;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
+import java.io.*;
 
 @RestController
 @RequestMapping("/arithmetic")
 @Slf4j
 public class ArithmeticController {
+
+    private String excelBasePath = "/data/application/excel/";
+    private String pythonBasePath = "/data/application/python/";
 
     @Autowired
     private IArithmeticService arithmeticService;
@@ -68,17 +73,48 @@ public class ArithmeticController {
     }
 
     @RequestMapping("/generate2")
-    public Object generate2(HttpServletResponse response,
+    public void generate2(HttpServletResponse response,
                             @RequestParam(name = "pyScript", required = false) String pyScript,
-                            @RequestParam(name = "pyArgs", required = false) String pyArgs) throws Exception {
+                            @RequestParam(name = "pyArgs", required = false) String pyArgs,
+                            @RequestParam(name = "paperType", required = false) String paperType) throws Exception {
         if (StringUtils.isBlank(pyScript)) {
-            pyScript = "script1.py";
+            pyScript = "gen_paper.py";
         }
 
-        String[] args = StringUtils.split(pyArgs, ",");
+        log.info("run python: {}, args: {}, paperType: {}", pyScript, pyArgs, paperType);
 
-        log.info("run python: {}, args: {}", pyScript, pyArgs);
+        if (null == paperType) {
+            paperType = "3";
+        }
 
-        return new PythonRunner().exec("/data/application/python/" + pyScript, args);
+        String[] args = {excelBasePath, paperType};
+
+        args = ArrayUtils.addAll(args, StringUtils.split(pyArgs, ","));
+
+        String excelFilePath = new PythonRunner().exec(pythonBasePath + pyScript, args);
+
+        log.info("excel path: {}", excelFilePath);
+
+        if (StringUtils.endsWith(excelFilePath, ".xlsx")) {
+            String fileName = StringUtils.substring(excelFilePath,
+                    StringUtils.lastIndexOf(excelFilePath, "/") + 1);
+            // 以流的形式下载文件。
+            InputStream fis = new BufferedInputStream(new FileInputStream(excelFilePath));
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            fis.close();
+
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+            OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
+            outputStream.write(buffer);
+            outputStream.flush();
+            outputStream.close();
+        } else {
+            response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+            response.setCharacterEncoding("utf-8");
+            PrintWriter pw = response.getWriter();
+            pw.print("生成出错了~");
+        }
     }
 }
