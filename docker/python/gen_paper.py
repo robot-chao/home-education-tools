@@ -15,20 +15,31 @@ def genPaper(itemCountPerPaper=30, paperCount=2, path="", opNum=2, max=10, min=5
         write2Excel(paperSheet, allItems[:itemCountPerPaper], 3)
 
     paperSheet.page_margins.bottom=0.8
-    paperBook.save(path + '.xlsx')
+    paperBook.save(path)
 
+argSize = len(sys.argv)
+path = sys.argv[1] + "计算题.xlsx"
 
-path = sys.argv[1]
 paperType = sys.argv[2]
+onlyResult = True
+if paperType == '2':
+    onlyResult = False
+opNum = 2
+if argSize > 3:
+    opNum = int(sys.argv[3])
+max=10
+if argSize > 4:
+    max = int(sys.argv[4])
+min=5
+if argSize > 5:
+    min = int(sys.argv[5])
+itemCountPerPaper=30
+if argSize > 6:
+    itemCountPerPaper = int(sys.argv[6])
+paperCount=2
+if argSize > 7:
+    paperCount = int(sys.argv[7])
 
-if paperType == '1':
-    path += "10以内连加连减"
-    genPaper(path)
-elif paperType == '2':
-    path += "10以内连加连减V2"
-    genPaper(path=path, onlyResult=False)
-elif paperType == '3':
-    path += "20以内连加连减"
-    genPaper(path=path, max=20, min=5, onlyResult=True)
+genPaper(itemCountPerPaper, paperCount, path, opNum, max, min, onlyResult)
 
-print(path + ".xlsx")
+print(path)

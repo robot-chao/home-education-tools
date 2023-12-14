@@ -81,10 +81,14 @@ public class ArithmeticController {
             pyScript = "gen_paper.py";
         }
 
+        if (StringUtils.isBlank(pyArgs)) {
+            pyArgs = "1,20,5";
+        }
+
         log.info("run python: {}, args: {}, paperType: {}", pyScript, pyArgs, paperType);
 
         if (null == paperType) {
-            paperType = "3";
+            paperType = "1";
         }
 
         String[] args = {excelBasePath, paperType};
