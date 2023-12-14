@@ -3,6 +3,7 @@ package cn.luckypapa.homeeducation.tools.arithmetic;
 import cn.luckypapa.homeeducation.utils.PythonRunner;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +68,17 @@ public class ArithmeticController {
     }
 
     @RequestMapping("/generate2")
-    public Object generate2(HttpServletResponse response) throws Exception {
-        log.info("run python");
-        return new PythonRunner().exec("/data/application/python/script1.py");
+    public Object generate2(HttpServletResponse response,
+                            @RequestParam(name = "pyScript", required = false) String pyScript,
+                            @RequestParam(name = "pyArgs", required = false) String pyArgs) throws Exception {
+        if (StringUtils.isBlank(pyScript)) {
+            pyScript = "script1.py";
+        }
+
+        String[] args = StringUtils.split(pyArgs, ",");
+
+        log.info("run python: {}, args: {}", pyScript, pyArgs);
+
+        return new PythonRunner().exec("/data/application/python/" + pyScript, args);
     }
 }

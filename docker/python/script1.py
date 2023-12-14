@@ -1,62 +1,21 @@
-# 创建一个Excel，生成20到计算题
-from openpyxl import Workbook
-import random
-from uitls import genAllArithmeticItems, write2Excel
+from uitls import write2Excel
+from arithmetic_utils import genArithmetics, formatArithmetics
 
-# 生成的题目中包含0的题目太多了
+def genPaper(itemCountPerPaper=30, paperCount=2, path="", opNum=2, max=10, min=5, onlyResult=True):
+    # 30道10以内连加连减
+    paperBook = Workbook()
+    paperSheet = paperBook.active
+    paperSheet.title = '四则运算'
+    allItems = formatArithmetics(genArithmetics(max=max, min=min, opNum=opNum), onlyResult=onlyResult)
+    for i in range(paperCount):
+        random.shuffle(allItems)
+        write2Excel(paperSheet, allItems[:itemCountPerPaper], 3)
 
-# 30道20以内加减法
-paperBook = Workbook()
-paperSheet = paperBook.active
-paperSheet.title = '四则运算'
+    paperSheet.page_margins.bottom=0.8
+    paperBook.save(path + '.xlsx')
 
-itemCount = 30
+print(sys.argv)
 
-allItems = genAllArithmeticItems(20, 1, (1,2))
-for i in range(10):
-    random.shuffle(allItems)
-    nextRow = write2Excel(paperSheet, allItems[:30], 3)
-
-paperBook.save('/data/application/excel/20以内加减法计算题.xlsx')
-
-# 30道100以内加减法
-paperBook = Workbook()
-paperSheet = paperBook.active
-paperSheet.title = '四则运算'
-
-itemCount = 30
-
-allItems = genAllArithmeticItems(100, 20)
-for i in range(10):
-    random.shuffle(allItems)
-    nextRow = write2Excel(paperSheet, allItems[:30], 3)
-
-paperBook.save('/data/application/excel/100以内加减法计算题.xlsx')
-
-# 30道10以内加减法
-paperBook = Workbook()
-paperSheet = paperBook.active
-paperSheet.title = '四则运算'
-
-itemCount = 30
-allItems = genAllArithmeticItems(10, 1, (1,2))
-for i in range(6):
-    random.shuffle(allItems)
-    write2Excel(paperSheet, allItems[:30], 3)
-paperSheet.page_margins.bottom=0.8
-paperBook.save('/data/application/excel/10以内加减法计算题.xlsx')
-
-# 30道10以内加减法，填加数，减数
-paperBook = Workbook()
-paperSheet = paperBook.active
-paperSheet.title = '四则运算'
-# print(paperSheet.max_row)
-itemCount = 30
-allItems = genAllArithmeticItems(10, 1)
-for i in range(6):
-    random.shuffle(allItems)
-    write2Excel(paperSheet, allItems[:30], 3)
-    # print(paperSheet.max_row)
-
-paperSheet.page_margins.bottom=0.8
-paperBook.save('/data/application/excel/10以内加减法计算题V2.xlsx')
+genPaper(path="/data/application/excel/10以内连加连减")
+genPaper(path="/data/application/excel/10以内连加连减V2", onlyResult=False)
+genPaper(path="/data/application/excel/20以内连加连减", max=20, min=5, onlyResult=True)
