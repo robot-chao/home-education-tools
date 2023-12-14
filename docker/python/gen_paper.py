@@ -27,18 +27,28 @@ if paperType == '2':
 opNum = 2
 if argSize > 3:
     opNum = int(sys.argv[3])
+    if opNum > 3:
+        opNum = 3
 max=10
 if argSize > 4:
     max = int(sys.argv[4])
+    if max > 100:
+        max = 100
 min=5
 if argSize > 5:
     min = int(sys.argv[5])
+    if min < 0:
+        min = 0
 itemCountPerPaper=30
 if argSize > 6:
     itemCountPerPaper = int(sys.argv[6])
+    if itemCountPerPaper > 100:
+        itemCountPerPaper = 100
 paperCount=2
 if argSize > 7:
     paperCount = int(sys.argv[7])
+    if paperCount > 10:
+        paperCount = 10
 
 genPaper(itemCountPerPaper, paperCount, path, opNum, max, min, onlyResult)
 
