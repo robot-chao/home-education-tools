@@ -105,7 +105,7 @@ public class ArithmeticController {
             fis.close();
 
             response.setContentType("application/octet-stream");
-            response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+            response.setHeader("Content-disposition", "attachment;filename=" +  new String(fileName.getBytes("UTF-8"), "ISO-8859-1"));
             OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
             outputStream.write(buffer);
             outputStream.flush();
