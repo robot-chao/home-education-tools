@@ -1,4 +1,6 @@
 import sys
+from openpyxl import Workbook
+import random
 from uitls import write2Excel
 from arithmetic_utils import genArithmetics, formatArithmetics
 
