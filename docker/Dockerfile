@@ -7,7 +7,9 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 ADD home-education-tools-0.0.1-SNAPSHOT.jar /data/application/
 WORKDIR /data/application/
-COPY python/ .
+RUN mkdir python
+RUN mkdir excel
+COPY python/ ./python/
 EXPOSE 8080
 EXPOSE 5025
 ENTRYPOINT ["java","-jar","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5025", "home-education-tools-0.0.1-SNAPSHOT.jar"]
