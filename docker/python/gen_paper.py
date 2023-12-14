@@ -31,4 +31,4 @@ elif paperType == '3':
     path += "20以内连加连减"
     genPaper(path=path, max=20, min=5, onlyResult=True)
 
-print(path)
+print(path + ".xlsx")
