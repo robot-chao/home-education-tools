@@ -17,7 +17,7 @@ for i in range(10):
     random.shuffle(allItems)
     nextRow = write2Excel(paperSheet, allItems[:30], 3)
 
-paperBook.save('20以内加减法计算题.xlsx')
+paperBook.save('/data/application/excel/20以内加减法计算题.xlsx')
 
 # 30道100以内加减法
 paperBook = Workbook()
@@ -31,7 +31,7 @@ for i in range(10):
     random.shuffle(allItems)
     nextRow = write2Excel(paperSheet, allItems[:30], 3)
 
-paperBook.save('100以内加减法计算题.xlsx')
+paperBook.save('/data/application/excel/100以内加减法计算题.xlsx')
 
 # 30道10以内加减法
 paperBook = Workbook()
@@ -44,7 +44,7 @@ for i in range(6):
     random.shuffle(allItems)
     write2Excel(paperSheet, allItems[:30], 3)
 paperSheet.page_margins.bottom=0.8
-paperBook.save('10以内加减法计算题.xlsx')
+paperBook.save('/data/application/excel/10以内加减法计算题.xlsx')
 
 # 30道10以内加减法，填加数，减数
 paperBook = Workbook()
@@ -59,4 +59,4 @@ for i in range(6):
     # print(paperSheet.max_row)
 
 paperSheet.page_margins.bottom=0.8
-paperBook.save('10以内加减法计算题V2.xlsx')
+paperBook.save('/data/application/excel/10以内加减法计算题V2.xlsx')
