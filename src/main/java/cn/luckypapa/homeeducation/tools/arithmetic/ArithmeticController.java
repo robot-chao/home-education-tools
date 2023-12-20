@@ -143,9 +143,8 @@ public class ArithmeticController {
         sheet.setColumnWidth(0, 28*256);
         sheet.setColumnWidth(1, 28*256);
         sheet.setColumnWidth(2, 28*256);
-        HSSFPrintSetup printSetup = sheet.getPrintSetup();
-        printSetup.setFooterMargin(2);
-        printSetup.setHeaderMargin(2);
+        sheet.setMargin(HSSFSheet.BottomMargin, 2);
+        sheet.setMargin(HSSFSheet.TopMargin, 2);
         // 设置要导出的文件的名字
         String fileName = "四则运算.xls";
 
