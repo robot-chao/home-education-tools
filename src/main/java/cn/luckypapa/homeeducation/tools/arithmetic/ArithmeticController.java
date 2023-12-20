@@ -176,9 +176,12 @@ public class ArithmeticController {
             row.setHeightInPoints((short) 40);
 
             HSSFCell cell = row.createCell(0);
+            cellStyle = workbook.createCellStyle();
+            cellStyle.setFont(hssfFont);
             cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
             cellStyle.setAlignment(HorizontalAlignment.RIGHT);
             cell.setCellStyle(cellStyle);
+
             row.createCell(1);
             row.createCell(2);
             sheet.addMergedRegion(new CellRangeAddress(rowNum - 1, rowNum - 1, 0, 2));
