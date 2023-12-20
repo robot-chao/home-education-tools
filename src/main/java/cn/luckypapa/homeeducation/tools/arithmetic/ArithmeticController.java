@@ -127,7 +127,7 @@ public class ArithmeticController {
     public void generate3(HttpServletResponse response,
                           @RequestParam(name = "opCount") int opCount,
                           @RequestParam(name = "itemCount") int itemCount) throws Exception {
-        if (opCount < 0) opCount = 1;
+        if (opCount < 1) opCount = 1;
         if (opCount > 5) opCount = 2;
 
         List<Arithmetic> arithmetics = ArithmeticBuilder.newGradeOneBuilder(opCount).build(itemCount);
@@ -137,33 +137,45 @@ public class ArithmeticController {
     private void render2Excel(HttpServletResponse response, List<Arithmetic> arithmetics) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("四则运算");
-        sheet.setColumnWidth(0, 50*256);
-        sheet.setColumnWidth(1, 50*256);
+        sheet.setColumnWidth(0, 28*256);
+        sheet.setColumnWidth(1, 28*256);
+        sheet.setColumnWidth(2, 28*256);
         // 设置要导出的文件的名字
         String fileName = "四则运算.xls";
 
+        //生成单元格样式
+        HSSFCellStyle cellStyle = workbook.createCellStyle();
+        //新建font实体
+        HSSFFont hssfFont = workbook.createFont();
+        //字体大小
+        hssfFont.setFontHeightInPoints((short)14);
+        hssfFont.setFontName("微软雅黑");
+        cellStyle.setFont(hssfFont);
+        cellStyle.setVerticalAlignment(VerticalAlignment.BOTTOM);
+
         HSSFRow row = null;
+        int rowNum = 0;
         for (int i = 0; i < arithmetics.size(); i ++) {
-            if (i % 2 == 0) {
-                row = sheet.createRow(i / 2);
-                row.setHeightInPoints((short) 240);
+            if (i % 3 == 0) {
+                row = sheet.createRow(i / 3);
+                rowNum ++;
+                row.setHeightInPoints((short) 30);
             }
 
-            HSSFCell cell = row.createCell(i % 2);
+            HSSFCell cell = row.createCell(i % 3);
 
-            //生成单元格样式
-            HSSFCellStyle cellStyle = workbook.createCellStyle();
-            //新建font实体
-            HSSFFont hssfFont = workbook.createFont();
-            //字体大小
-            hssfFont.setFontHeightInPoints((short)16);
-            hssfFont.setFontName("楷体");
-            cellStyle.setFont(hssfFont);
-            cellStyle.setVerticalAlignment(VerticalAlignment.TOP);
             cell.setCellStyle(cellStyle);
 
             cell.setCellValue(arithmetics.get(i).toString());
         }
+
+        row = sheet.createRow(rowNum);
+        row.setHeightInPoints((short) 30);
+
+        HSSFCell cell = row.createCell(1);
+
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue("日期：_________，用时：________，得分：________");
 
         response.setContentType("application/octet-stream");
         response.setHeader("Content-disposition", "attachment;filename=" + new String(fileName.getBytes("UTF-8"), "ISO-8859-1"));
