@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/arithmetic")
@@ -120,5 +121,54 @@ public class ArithmeticController {
             PrintWriter pw = response.getWriter();
             pw.print("生成出错了~");
         }
+    }
+
+    @RequestMapping("/generate3")
+    public void generate3(HttpServletResponse response,
+                          @RequestParam(name = "opCount") int opCount,
+                          @RequestParam(name = "itemCount") int itemCount) throws Exception {
+        if (opCount < 0) opCount = 1;
+        if (opCount > 5) opCount = 2;
+
+        List<Arithmetic> arithmetics = ArithmeticBuilder.newGradeOneBuilder(opCount).build(itemCount);
+        render2Excel(response, arithmetics);
+    }
+
+    private void render2Excel(HttpServletResponse response, List<Arithmetic> arithmetics) throws IOException {
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("四则运算");
+        sheet.setColumnWidth(0, 50*256);
+        sheet.setColumnWidth(1, 50*256);
+        // 设置要导出的文件的名字
+        String fileName = "四则运算.xls";
+
+        HSSFRow row = null;
+        for (int i = 0; i < arithmetics.size(); i ++) {
+            if (i % 2 == 0) {
+                row = sheet.createRow(i / 2);
+                row.setHeightInPoints((short) 240);
+            }
+
+            HSSFCell cell = row.createCell(i % 2);
+
+            //生成单元格样式
+            HSSFCellStyle cellStyle = workbook.createCellStyle();
+            //新建font实体
+            HSSFFont hssfFont = workbook.createFont();
+            //字体大小
+            hssfFont.setFontHeightInPoints((short)16);
+            hssfFont.setFontName("楷体");
+            cellStyle.setFont(hssfFont);
+            cellStyle.setVerticalAlignment(VerticalAlignment.TOP);
+            cell.setCellStyle(cellStyle);
+
+            cell.setCellValue(arithmetics.get(i).toString());
+        }
+
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-disposition", "attachment;filename=" + new String(fileName.getBytes("UTF-8"), "ISO-8859-1"));
+        response.flushBuffer();
+        workbook.write(response.getOutputStream());
+        workbook.close();
     }
 }

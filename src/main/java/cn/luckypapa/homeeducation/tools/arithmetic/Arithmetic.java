@@ -1,8 +1,12 @@
 package cn.luckypapa.homeeducation.tools.arithmetic;
 
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.*;
 
 @Getter
+@Slf4j
 public class Arithmetic {
     public static final String OP_PLUS = "+";
 
@@ -12,73 +16,361 @@ public class Arithmetic {
 
     public static final String OP_DIVISION = "÷";
 
-    private boolean isNum = false;
+    public static final int MAX_RETRY_COUNT = 10000;
 
-    private int value;
+    private List<ArithmeticElement> elements = new ArrayList<>();
 
-    private ArithmeticOperatorEnum operator;
+    private List<ArithmeticOperand> operands;
 
-    private Arithmetic first;
+    private List<ArithmeticOperator> operators;
 
-    private Arithmetic second;
+    private int opNum;
 
-    public Arithmetic(Arithmetic first, ArithmeticOperatorEnum operator, Arithmetic second) {
-        this.first = first;
-        this.operator = operator;
-        this.second = second;
+    private boolean valid;
+
+    private ArithmeticOperand result;
+
+    private Number max = 20;
+
+    private Number min = 5;
+
+    public Arithmetic(int opNum, ArithmeticOperandType operandType,
+                      int operatorType, boolean parentheses, Number max, Number min) {
+        int retry = 0;
+        while (!this.valid && retry ++ < MAX_RETRY_COUNT) {
+            this.operands = ArithmeticOperand.random(opNum + 1, operandType, max.intValue(), min.intValue());
+            this.operators = ArithmeticOperator.random(opNum, operatorType);
+            if (parentheses)    this.insertParentheses();
+            log.debug("expression: {}", this);
+            this.calcAndCheckArithmetic();
+        }
+
+        if (retry >= MAX_RETRY_COUNT) {
+            log.error("超过最大重试次数");
+            throw new RuntimeException("超过最大重试次数");
+        }
     }
 
-    public Arithmetic(int value) {
-        this.isNum = true;
-        this.value = value;
+    public Arithmetic(int opNum, ArithmeticOperandType operandType,
+                      int operatorType, boolean parentheses) {
+        while (!this.valid) {
+            this.operands = ArithmeticOperand.random(opNum + 1, operandType, max.intValue(), min.intValue());
+            this.operators = ArithmeticOperator.random(opNum, operatorType);
+            if (parentheses)    this.insertParentheses();
+            log.debug("expression: {}", this);
+            this.calcAndCheckArithmetic();
+        }
+    }
+
+    public Arithmetic(String arithmetic) {
+        this.operators = new ArrayList<>();
+        this.operands = new ArrayList<>();
+        int len = arithmetic.length();
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < len; i++) {
+            char ch = arithmetic.charAt(i);
+            switch (ch) {
+                case '+':
+                    this.operators.add(ArithmeticOperator.PLUS);
+                    if (!builder.isEmpty()) {
+                        this.operands.add(new ArithmeticOperand(Integer.parseInt(builder.toString())));
+                        builder.delete(0, builder.length());
+                    }
+                    break;
+                case '-':
+                    this.operators.add(ArithmeticOperator.MINUS);
+                    if (!builder.isEmpty()) {
+                        this.operands.add(new ArithmeticOperand(Integer.parseInt(builder.toString())));
+                        builder.delete(0, builder.length());
+                    }
+                    break;
+                case 'x':
+                    this.operators.add(ArithmeticOperator.MULTI);
+                    if (!builder.isEmpty()) {
+                        this.operands.add(new ArithmeticOperand(Integer.parseInt(builder.toString())));
+                        builder.delete(0, builder.length());
+                    }
+                    break;
+                case '÷':
+                    this.operators.add(ArithmeticOperator.DIVISION);
+                    if (!builder.isEmpty()) {
+                        this.operands.add(new ArithmeticOperand(Integer.parseInt(builder.toString())));
+                        builder.delete(0, builder.length());
+                    }
+                    break;
+                case '(':
+                    this.operators.add(ArithmeticOperator.LEFT_PARENTHESIS);
+                    if (!builder.isEmpty()) {
+                        this.operands.add(new ArithmeticOperand(Integer.parseInt(builder.toString())));
+                        builder.delete(0, builder.length());
+                    }
+                    break;
+                case ')':
+                    this.operators.add(ArithmeticOperator.RIGHT_PARENTHESIS);
+                    if (!builder.isEmpty()) {
+                        this.operands.add(new ArithmeticOperand(Integer.parseInt(builder.toString())));
+                        builder.delete(0, builder.length());
+                    }
+                    break;
+                default:
+                    builder.append(ch);
+                    break;
+            }
+        }
+        if (!builder.isEmpty()) {
+            this.operands.add(new ArithmeticOperand(Integer.parseInt(builder.toString())));
+            builder.delete(0, builder.length());
+        }
+        this.calcAndCheckArithmetic();
+    }
+
+    private void calcAndCheckArithmetic() {
+        Deque<ArithmeticElement> postfixExpression = toPostfixExpression();
+        Stack<Number> stack = new Stack<>();
+        while (!postfixExpression.isEmpty()) {
+            ArithmeticElement curElement = postfixExpression.removeFirst();
+
+            if (curElement instanceof ArithmeticOperand) {
+                stack.push(((ArithmeticOperand) curElement).getOperand());
+            } else {
+                char ch = ((ArithmeticOperator) curElement).getOperator().charAt(0);
+                Number second = stack.pop();
+                Number first = stack.pop();
+                switch (ch) {
+                    case '+':
+                        int r = first.intValue() + second.intValue();
+                        if (r > max.intValue()) {
+                            log.debug("加法结果{}不能大于最大值{}", r, max.intValue());
+                            this.valid = false;
+                            return;
+                        }
+                        stack.push(r);
+                        break;
+                    case '-':
+                        r = first.intValue() - second.intValue();
+                        if (r < 0) {
+                            log.debug("减法结果不能为负数");
+                            this.valid = false;
+                            return;
+                        }
+                        stack.push(r);
+                        break;
+                    case 'x':
+                        stack.push(first.intValue() * second.intValue());
+                        break;
+                    case '÷':
+                        if (0 == second.intValue()) {
+                            log.debug("除数不能为0");
+                            this.valid = false;
+                            return;
+                        }
+
+                        if (first.intValue() % second.intValue() != 0) {
+                            log.debug("除法不能整除，{}, {}", first.intValue(), second.intValue());
+                            this.valid = false;
+                            return;
+                        }
+
+                        stack.push(first.intValue() / second.intValue());
+                        break;
+                }
+            }
+        }
+        this.result = new ArithmeticOperand(stack.pop());
+        this.valid = true;
+        log.debug("result: {}", this.result.getOperand());
+    }
+
+    private void insertParentheses() {
+        // (1 + 2 + 3 + 4) 不可以
+        // 1 + (2) 不可以
+        // 1 + ((2 + 3)) + 4 不可以
+        
+        Random random = new Random(System.nanoTime());
+        int parenthesesNum = random.nextInt(this.operators.size());
+
+        for (int i = 0; i < parenthesesNum; i++) {
+            List<Integer> availableLeftParenthesisPos = getAvailableLeftParenthesisPos();
+            int leftSize = availableLeftParenthesisPos.size();
+            if (leftSize == 0) {
+                continue;
+            }
+            int leftPos = availableLeftParenthesisPos.get(random.nextInt(leftSize));
+
+            List<Integer> availableRightParenthesisPos = getAvailableRightParenthesisPos(leftPos);
+            int rightSize = availableRightParenthesisPos.size();
+            if (rightSize == 0) {
+                continue;
+            }
+
+            int rightPos = availableRightParenthesisPos.get(random.nextInt(rightSize));
+
+            this.operators.add(rightPos, ArithmeticOperator.RIGHT_PARENTHESIS);
+            this.operators.add(leftPos, ArithmeticOperator.LEFT_PARENTHESIS);
+            log.debug("{}, left: {}, right: {}, avl:{}, avr:{}", toString(), leftPos, rightPos,
+                    Arrays.toString(availableLeftParenthesisPos.toArray(new Integer[0])),
+                    Arrays.toString(availableRightParenthesisPos.toArray(new Integer[0])));
+        }
+    }
+
+    private List<Integer> getAvailableLeftParenthesisPos() {
+        List<Integer> poses = new ArrayList<>();
+        for (int i = 0; i < this.operators.size() - 1; i++) {
+            // 当前位置为右括号，则它的前后均不能放左括号
+            if (!isRightParenthesis(i) && !isRightParenthesis(i - 1)) {
+                poses.add(i);
+            }
+        }
+
+        return poses;
+    }
+
+    private List<Integer> getAvailableRightParenthesisPos(int start) {
+        List<Integer> poses = new ArrayList<>();
+        boolean isStartAtLeftParenthesis = isLeftParenthesis(start);
+        int leftParenthesisNum = isStartAtLeftParenthesis ? 1 : 0;
+        int size = this.operators.size();
+        for (int i = start + 1; i < size; i++) {
+            boolean isRightParenthesis = isRightParenthesis(i);
+            if (isRightParenthesis) {
+                leftParenthesisNum --;
+            } else if (isLeftParenthesis(i)) {
+                leftParenthesisNum ++;
+            }
+
+            if (leftParenthesisNum < 0) {
+                break;
+            }
+
+            if (0 == leftParenthesisNum &&
+                    // 插入的位置不能有左括号
+                    !isLeftParenthesis(i + 1)
+                    && !isUselessParenthesis(start, i + 1)) {
+                poses.add(i + 1);
+            }
+        }
+
+        return poses;
+    }
+
+    private boolean isUselessParenthesis(int left, int right) {
+        int size = this.operators.size();
+
+        // 插入的左括号在开头的时候，右括号不能在最后
+        if (0 == left && size == right) {
+            return true;
+        }
+
+        // 插入的左括号位于左括号之前，则新的右括号不能位于右括号之后
+        if (isLeftParenthesis(left)
+                && isRightParenthesis(right - 1)) {
+            return true;
+        }
+
+        // 插入的左括号位于左括号之后，则新的右括号不能位于右括号之前
+        if (isLeftParenthesis(left - 1)
+                && isRightParenthesis(right)) {
+            return true;
+        }
+        return false;
     }
 
     @Override
     public String toString() {
-        if (isNum) {
-            return value + "";
-        }
+        StringBuilder builder = new StringBuilder();
 
-        String firstStr = first.toString();
-        if (!first.isNum &&
-                (first.operator.equals(ArithmeticOperatorEnum.PLUS)
-                        || first.operator.equals(ArithmeticOperatorEnum.MINUS))) {
-            firstStr = "(" + firstStr + ")";
-        }
-        String secondStr = second.toString();
-        if (!second.isNum && !second.operator.equals(ArithmeticOperatorEnum.MULTI)) {
-            secondStr = "(" + secondStr + ")";
-        }
+        List<ArithmeticElement> elementList = mergeElements();
 
-        return firstStr + operator.getValue() + secondStr;
-    }
-
-    public StringBuilder toStack() {
-        if (isNum) {
-            return new StringBuilder().append(this.value);
-        }
-
-        return new StringBuilder(operator.getValue())
-                .append("[")
-                .append(first.toStack())
-                .append(",")
-                .append(second.toStack())
-                .append("]");
-    }
-
-    public int eval() {
-        if (isNum) return this.value;
-
-        switch (operator) {
-            case PLUS -> {return first.eval() + second.eval();}
-            case MINUS -> {return first.eval() - second.eval();}
-            case MULTI -> {return first.eval() * second.eval();}
-            default -> {
-                if (first.eval() % second.eval() != 0) {
-                    System.out.println("值计算出错");
-                }
-                return first.eval() / second.eval();
+        for (int i = 0; i < elementList.size(); i++) {
+            ArithmeticElement element = elementList.get(i);
+            if (element instanceof ArithmeticOperand) {
+                builder.append(((ArithmeticOperand) element).getOperand());
+            } else {
+                builder.append(((ArithmeticOperator) element).getOperator());
             }
         }
+
+        builder.append("=");
+        return builder.toString();
+    }
+
+    private List<ArithmeticElement> mergeElements() {
+        int operand = 0, operator = 0;
+        List<ArithmeticElement> elementList =
+                new ArrayList<>(this.operands.size() + this.operators.size());
+        boolean isNextOperand = !isLeftParenthesis(0);
+
+        int total = this.operands.size() + this.operators.size();
+        for (int i = 0; i < total; i++) {
+            if (isNextOperand) {
+                elementList.add(this.operands.get(operand));
+                operand ++;
+                isNextOperand = false;
+            } else {
+                ArithmeticOperator curOperator = this.operators.get(operator);
+                elementList.add(this.operators.get(operator));
+                operator ++;
+                // 下一个操作符是左括号，继续拼接操作符
+                // 当前操作符是右括号，继续拼接操作符
+                isNextOperand = !isLeftParenthesis(operator) && !isRightParenthesis(curOperator);
+            }
+        }
+
+        return elementList;
+    }
+    private boolean isLeftParenthesis(int index) {
+        return index >= 0 && index < this.operators.size() && ArithmeticOperator.LEFT_PARENTHESIS == this.operators.get(index);
+    }
+
+    private boolean isRightParenthesis(ArithmeticOperator operator) {
+        return ArithmeticOperator.RIGHT_PARENTHESIS == operator;
+    }
+
+    private boolean isRightParenthesis(int index) {
+        return index >= 0 && index < this.operators.size() && ArithmeticOperator.RIGHT_PARENTHESIS == this.operators.get(index);
+    }
+
+    public Deque<ArithmeticElement> toPostfixExpression() {
+        Deque<ArithmeticOperator> stack1 = new LinkedList<>();
+        Deque<ArithmeticElement> stack2 = new LinkedList<>();
+
+        List<ArithmeticElement> elementList = mergeElements();
+
+        for (int i = 0; i < elementList.size(); i++) {
+            ArithmeticElement element = elementList.get(i);
+            if (element instanceof ArithmeticOperand) {
+                stack2.addLast(element);
+            } else {
+                ArithmeticOperator curOperator = (ArithmeticOperator) element;
+                // stack1为空 或者 遇到左括号
+                if (stack1.isEmpty() || stack1.peekLast().equals(ArithmeticOperator.LEFT_PARENTHESIS)) {
+                    stack1.addLast(curOperator);
+                } else if (curOperator.equals(ArithmeticOperator.RIGHT_PARENTHESIS)) {
+                    while (!stack1.isEmpty()) {
+                        ArithmeticOperator topOperator = stack1.removeLast();
+                        if (topOperator.equals(ArithmeticOperator.LEFT_PARENTHESIS)) {
+                            break;
+                        }
+                        stack2.addLast(topOperator);
+                    }
+                } else if (curOperator.equals(ArithmeticOperator.LEFT_PARENTHESIS)) {
+                    stack1.addLast(curOperator);
+                } else {
+                    ArithmeticOperator topOperator = stack1.peekLast();
+                    if (curOperator.getPriority() > topOperator.getPriority()) {
+                        stack1.addLast(curOperator);
+                    } else {
+                        stack2.addLast(stack1.removeLast());
+                        i --;
+                    }
+                }
+            }
+        }
+
+        while (!stack1.isEmpty()) {
+            stack2.addLast(stack1.removeLast());
+        }
+
+        return stack2;
     }
 }

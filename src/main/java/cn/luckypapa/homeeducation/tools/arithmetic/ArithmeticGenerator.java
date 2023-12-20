@@ -52,11 +52,11 @@ public class ArithmeticGenerator {
     }
 
     private static void printArithmetic(Arithmetic arithmetic) {
-        System.out.println(arithmetic.toString() + ", stack:" + arithmetic.toStack() + ", eval:" + arithmetic.eval() );
+        //System.out.println(arithmetic.toString() + ", stack:" + arithmetic.toStack() + ", eval:" + arithmetic.eval() );
     }
 
     private static Arithmetic generate(int opCount, int result) throws Exception {
-        if (opCount == 0) {
+        /*if (opCount == 0) {
             return new Arithmetic(result);
         }
         int opIndex = randomNumber(1, opCount);
@@ -68,9 +68,9 @@ public class ArithmeticGenerator {
 
         Arithmetic arithmetic = new Arithmetic(
                 generate(opIndex - 1, opNums[0]), generator.getOperator(),
-                generate(opCount - opIndex, opNums[1]));
+                generate(opCount - opIndex, opNums[1]));*/
 
-        return arithmetic;
+        return null;
     }
 
     private static boolean check(ArithmeticOperatorEnum operator, int[] opNums) {
