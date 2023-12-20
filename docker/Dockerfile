@@ -1,4 +1,4 @@
-FROM openjdk:17-alpine
+FROM eclipse-temurin:17.0.5_8-jdk-ubi9-minimal
 ENV TZ=Asia/Shanghai
 ENV LOG_HOME=/data/applogs
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
