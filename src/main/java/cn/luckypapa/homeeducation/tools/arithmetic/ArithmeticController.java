@@ -160,7 +160,6 @@ public class ArithmeticController {
             for (int i = 0; i < 30; i ++) {
                 if (i % 3 == 0) {
                     row = sheet.createRow(rowNum ++);
-                    rowNum ++;
                     row.setHeightInPoints((short) 30);
                 }
 
