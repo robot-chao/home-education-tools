@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,18 +146,18 @@ public class ArithmeticController {
         // 设置要导出的文件的名字
         String fileName = "四则运算.xls";
 
-        //生成单元格样式
-        HSSFCellStyle cellStyle = workbook.createCellStyle();
-        //新建font实体
-        HSSFFont hssfFont = workbook.createFont();
-        //字体大小
-        hssfFont.setFontHeightInPoints((short)14);
-        hssfFont.setFontName("微软雅黑");
-        cellStyle.setFont(hssfFont);
-        cellStyle.setVerticalAlignment(VerticalAlignment.BOTTOM);
-
         int rowNum = 0;
         for (int page = 0; page < pageCount; page++) {
+            //生成单元格样式
+            HSSFCellStyle cellStyle = workbook.createCellStyle();
+            //新建font实体
+            HSSFFont hssfFont = workbook.createFont();
+            //字体大小
+            hssfFont.setFontHeightInPoints((short)14);
+            hssfFont.setFontName("微软雅黑");
+            cellStyle.setFont(hssfFont);
+            cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+
             HSSFRow row = null;
             for (int i = 0; i < 30; i ++) {
                 if (i % 3 == 0) {
@@ -172,9 +173,11 @@ public class ArithmeticController {
             }
 
             row = sheet.createRow(rowNum ++);
-            row.setHeightInPoints((short) 30);
+            row.setHeightInPoints((short) 40);
 
             HSSFCell cell = row.createCell(0);
+            cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+            cellStyle.setAlignment(HorizontalAlignment.RIGHT);
             cell.setCellStyle(cellStyle);
             row.createCell(1);
             row.createCell(2);
