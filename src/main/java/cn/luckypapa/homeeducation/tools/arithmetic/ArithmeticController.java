@@ -154,12 +154,12 @@ public class ArithmeticController {
         cellStyle.setFont(hssfFont);
         cellStyle.setVerticalAlignment(VerticalAlignment.BOTTOM);
 
+        int rowNum = 0;
         for (int page = 0; page < pageCount; page++) {
             HSSFRow row = null;
-            int rowNum = 0;
             for (int i = 0; i < 30; i ++) {
                 if (i % 3 == 0) {
-                    row = sheet.createRow(i / 3);
+                    row = sheet.createRow(rowNum ++);
                     rowNum ++;
                     row.setHeightInPoints((short) 30);
                 }
@@ -171,7 +171,7 @@ public class ArithmeticController {
                 cell.setCellValue(arithmetics.get(i + 30 * page).toString());
             }
 
-            row = sheet.createRow(rowNum);
+            row = sheet.createRow(rowNum ++);
             row.setHeightInPoints((short) 30);
 
             HSSFCell cell = row.createCell(1);
