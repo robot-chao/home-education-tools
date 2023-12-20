@@ -126,15 +126,16 @@ public class ArithmeticController {
     @RequestMapping("/generate3")
     public void generate3(HttpServletResponse response,
                           @RequestParam(name = "opCount") int opCount,
-                          @RequestParam(name = "itemCount") int itemCount) throws Exception {
+                          @RequestParam(name = "pageCount") int pageCount) throws Exception {
         if (opCount < 1) opCount = 1;
         if (opCount > 5) opCount = 2;
+        if (pageCount < 2 || pageCount > 10) pageCount = 2;
 
-        List<Arithmetic> arithmetics = ArithmeticBuilder.newGradeOneBuilder(opCount).build(itemCount);
-        render2Excel(response, arithmetics);
+        List<Arithmetic> arithmetics = ArithmeticBuilder.newGradeOneBuilder(opCount).build(30 * pageCount);
+        render2Excel(response, arithmetics, pageCount);
     }
 
-    private void render2Excel(HttpServletResponse response, List<Arithmetic> arithmetics) throws IOException {
+    private void render2Excel(HttpServletResponse response, List<Arithmetic> arithmetics, int pageCount) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("四则运算");
         sheet.setColumnWidth(0, 28*256);
@@ -153,29 +154,31 @@ public class ArithmeticController {
         cellStyle.setFont(hssfFont);
         cellStyle.setVerticalAlignment(VerticalAlignment.BOTTOM);
 
-        HSSFRow row = null;
-        int rowNum = 0;
-        for (int i = 0; i < arithmetics.size(); i ++) {
-            if (i % 3 == 0) {
-                row = sheet.createRow(i / 3);
-                rowNum ++;
-                row.setHeightInPoints((short) 30);
+        for (int page = 0; page < pageCount; page++) {
+            HSSFRow row = null;
+            int rowNum = 0;
+            for (int i = 0; i < 30; i ++) {
+                if (i % 3 == 0) {
+                    row = sheet.createRow(i / 3);
+                    rowNum ++;
+                    row.setHeightInPoints((short) 30);
+                }
+
+                HSSFCell cell = row.createCell(i % 3);
+
+                cell.setCellStyle(cellStyle);
+
+                cell.setCellValue(arithmetics.get(i + 30 * page).toString());
             }
 
-            HSSFCell cell = row.createCell(i % 3);
+            row = sheet.createRow(rowNum);
+            row.setHeightInPoints((short) 30);
+
+            HSSFCell cell = row.createCell(1);
 
             cell.setCellStyle(cellStyle);
-
-            cell.setCellValue(arithmetics.get(i).toString());
+            cell.setCellValue("日期：_________，用时：________，得分：________");
         }
-
-        row = sheet.createRow(rowNum);
-        row.setHeightInPoints((short) 30);
-
-        HSSFCell cell = row.createCell(1);
-
-        cell.setCellStyle(cellStyle);
-        cell.setCellValue("日期：_________，用时：________，得分：________");
 
         response.setContentType("application/octet-stream");
         response.setHeader("Content-disposition", "attachment;filename=" + new String(fileName.getBytes("UTF-8"), "ISO-8859-1"));
