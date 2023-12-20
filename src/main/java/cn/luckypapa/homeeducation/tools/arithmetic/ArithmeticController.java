@@ -7,6 +7,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -173,9 +174,11 @@ public class ArithmeticController {
             row = sheet.createRow(rowNum ++);
             row.setHeightInPoints((short) 30);
 
-            HSSFCell cell = row.createCell(1);
-
+            HSSFCell cell = row.createCell(0);
             cell.setCellStyle(cellStyle);
+            row.createCell(1);
+            row.createCell(2);
+            sheet.addMergedRegion(new CellRangeAddress(rowNum - 1, rowNum - 1, 0, 2));
             cell.setCellValue("日期：_________，用时：________，得分：________");
         }
 
