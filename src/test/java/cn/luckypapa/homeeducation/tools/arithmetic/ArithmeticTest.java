@@ -20,7 +20,7 @@ class ArithmeticTest {
             Arithmetic arithmetic = new Arithmetic(2, ArithmeticOperandType.INT, 1, true);
             // log.info("表达式: {}，是否有效：{}", arithmetic, arithmetic.isValid());
             if (arithmetic.isValid()) {
-                log.info("有效的算式：{}", arithmetic);
+                log.debug("有效的算式：{}", arithmetic);
                 count ++;
             }
         }
@@ -31,7 +31,7 @@ class ArithmeticTest {
             Arithmetic arithmetic = new Arithmetic(5, ArithmeticOperandType.INT, 2, true);
             // log.info("表达式: {}，是否有效：{}", arithmetic, arithmetic.isValid());
             if (arithmetic.isValid()) {
-                log.info("有效的算式：{}", arithmetic);
+                log.debug("有效的算式：{}", arithmetic);
                 count ++;
             }
         }
@@ -43,7 +43,7 @@ class ArithmeticTest {
     void testToPostfixExpressionLoop() {
         for (int i = 0; i < 100; i++) {
             Arithmetic arithmetic = new Arithmetic(5, ArithmeticOperandType.INT, 2, true);
-            log.info(arithmetic.toString());
+            log.debug(arithmetic.toString());
             Deque<ArithmeticElement> postfixExpression = arithmetic.toPostfixExpression();
             int size = postfixExpression.size();
             String[] express = new String[size];
@@ -57,7 +57,7 @@ class ArithmeticTest {
                 }
             }
 
-            log.info("postfix: {}", StringUtils.join(express, " "));
+            log.debug("postfix: {}", StringUtils.join(express, " "));
         }
 
     }
