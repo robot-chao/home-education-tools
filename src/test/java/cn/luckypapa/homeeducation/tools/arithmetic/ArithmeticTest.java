@@ -1,26 +1,24 @@
 package cn.luckypapa.homeeducation.tools.arithmetic;
 
+import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticOperand;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Deque;
-import java.util.Stack;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 class ArithmeticTest {
     @Test
     void testGenArithmetic() {
+        ArithmeticIntGenerator intGenerator = new ArithmeticIntGenerator(20, 5);
         int count = 0;
         for (int i = 0; i < 1000; i++) {
-            Arithmetic arithmetic = new Arithmetic(2, ArithmeticOperandType.INT, 1, true);
+            Arithmetic arithmetic = new Arithmetic(2, intGenerator, 1, true,
+                    ArithmeticValidator.intValidator(20));
             // log.info("表达式: {}，是否有效：{}", arithmetic, arithmetic.isValid());
             if (arithmetic.isValid()) {
-                log.debug("有效的算式：{}", arithmetic);
+                log.info("有效的算式：{}", arithmetic);
                 count ++;
             }
         }
@@ -28,10 +26,11 @@ class ArithmeticTest {
         log.info("{} of 1000 is valid", count);
         count = 0;
         for (int i = 0; i < 10000; i++) {
-            Arithmetic arithmetic = new Arithmetic(5, ArithmeticOperandType.INT, 2, true);
+            Arithmetic arithmetic = new Arithmetic(5, intGenerator, 2, true,
+                    ArithmeticValidator.intValidator(20));
             // log.info("表达式: {}，是否有效：{}", arithmetic, arithmetic.isValid());
             if (arithmetic.isValid()) {
-                log.debug("有效的算式：{}", arithmetic);
+                log.info("有效的算式：{}", arithmetic);
                 count ++;
             }
         }
@@ -41,8 +40,10 @@ class ArithmeticTest {
 
     @Test
     void testToPostfixExpressionLoop() {
+        ArithmeticIntGenerator intGenerator = new ArithmeticIntGenerator(20, 5);
         for (int i = 0; i < 100; i++) {
-            Arithmetic arithmetic = new Arithmetic(5, ArithmeticOperandType.INT, 2, true);
+            Arithmetic arithmetic = new Arithmetic(5, intGenerator, 2, true,
+                    ArithmeticValidator.intValidator(20));
             log.debug(arithmetic.toString());
             Deque<ArithmeticElement> postfixExpression = arithmetic.toPostfixExpression();
             int size = postfixExpression.size();
@@ -64,6 +65,7 @@ class ArithmeticTest {
 
     @Test
     void testToPostfixExpression() {
+        doTestToPostfixExpression("18-20+6");
         doTestToPostfixExpression("(11+10-16)-(9÷9-8)");
         doTestToPostfixExpression("19÷(13÷14÷7)-8-9");
     }

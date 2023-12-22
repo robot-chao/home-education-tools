@@ -1,5 +1,7 @@
 package cn.luckypapa.homeeducation.tools.arithmetic;
 
+import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticInt;
+import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticOperand;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,31 +36,20 @@ public class Arithmetic {
 
     private Number min = 5;
 
-    public Arithmetic(int opNum, ArithmeticOperandType operandType,
-                      int operatorType, boolean parentheses, Number max, Number min) {
+    public Arithmetic(int opNum, ArithmeticOperandGenerator operandGenerator,
+                      int operatorType, boolean parentheses, ArithmeticValidator arithmeticValidator) {
         int retry = 0;
         while (!this.valid && retry ++ < MAX_RETRY_COUNT) {
-            this.operands = ArithmeticOperand.random(opNum + 1, operandType, max.intValue(), min.intValue());
+            this.operands = operandGenerator.generate(opNum + 1);
             this.operators = ArithmeticOperator.random(opNum, operatorType);
             if (parentheses)    this.insertParentheses();
             log.debug("expression: {}", this);
-            this.calcAndCheckArithmetic();
+            this.calcAndCheckArithmetic(arithmeticValidator);
         }
 
         if (retry >= MAX_RETRY_COUNT) {
             log.error("超过最大重试次数");
             throw new RuntimeException("超过最大重试次数");
-        }
-    }
-
-    public Arithmetic(int opNum, ArithmeticOperandType operandType,
-                      int operatorType, boolean parentheses) {
-        while (!this.valid) {
-            this.operands = ArithmeticOperand.random(opNum + 1, operandType, max.intValue(), min.intValue());
-            this.operators = ArithmeticOperator.random(opNum, operatorType);
-            if (parentheses)    this.insertParentheses();
-            log.debug("expression: {}", this);
-            this.calcAndCheckArithmetic();
         }
     }
 
@@ -73,42 +64,42 @@ public class Arithmetic {
                 case '+':
                     this.operators.add(ArithmeticOperator.PLUS);
                     if (!builder.isEmpty()) {
-                        this.operands.add(new ArithmeticOperand(Integer.parseInt(builder.toString())));
+                        this.operands.add(new ArithmeticInt(Integer.parseInt(builder.toString())));
                         builder.delete(0, builder.length());
                     }
                     break;
                 case '-':
                     this.operators.add(ArithmeticOperator.MINUS);
                     if (!builder.isEmpty()) {
-                        this.operands.add(new ArithmeticOperand(Integer.parseInt(builder.toString())));
+                        this.operands.add(new ArithmeticInt(Integer.parseInt(builder.toString())));
                         builder.delete(0, builder.length());
                     }
                     break;
                 case 'x':
                     this.operators.add(ArithmeticOperator.MULTI);
                     if (!builder.isEmpty()) {
-                        this.operands.add(new ArithmeticOperand(Integer.parseInt(builder.toString())));
+                        this.operands.add(new ArithmeticInt(Integer.parseInt(builder.toString())));
                         builder.delete(0, builder.length());
                     }
                     break;
                 case '÷':
                     this.operators.add(ArithmeticOperator.DIVISION);
                     if (!builder.isEmpty()) {
-                        this.operands.add(new ArithmeticOperand(Integer.parseInt(builder.toString())));
+                        this.operands.add(new ArithmeticInt(Integer.parseInt(builder.toString())));
                         builder.delete(0, builder.length());
                     }
                     break;
                 case '(':
                     this.operators.add(ArithmeticOperator.LEFT_PARENTHESIS);
                     if (!builder.isEmpty()) {
-                        this.operands.add(new ArithmeticOperand(Integer.parseInt(builder.toString())));
+                        this.operands.add(new ArithmeticInt(Integer.parseInt(builder.toString())));
                         builder.delete(0, builder.length());
                     }
                     break;
                 case ')':
                     this.operators.add(ArithmeticOperator.RIGHT_PARENTHESIS);
                     if (!builder.isEmpty()) {
-                        this.operands.add(new ArithmeticOperand(Integer.parseInt(builder.toString())));
+                        this.operands.add(new ArithmeticInt(Integer.parseInt(builder.toString())));
                         builder.delete(0, builder.length());
                     }
                     break;
@@ -118,65 +109,45 @@ public class Arithmetic {
             }
         }
         if (!builder.isEmpty()) {
-            this.operands.add(new ArithmeticOperand(Integer.parseInt(builder.toString())));
+            this.operands.add(new ArithmeticInt(Integer.parseInt(builder.toString())));
             builder.delete(0, builder.length());
         }
-        this.calcAndCheckArithmetic();
+        this.calcAndCheckArithmetic(ArithmeticValidator.intValidator(20));
     }
 
-    private void calcAndCheckArithmetic() {
+    private void calcAndCheckArithmetic(ArithmeticValidator arithmeticValidator) {
         Deque<ArithmeticElement> postfixExpression = toPostfixExpression();
-        Stack<Number> stack = new Stack<>();
+        Stack<ArithmeticOperand> stack = new Stack<>();
         while (!postfixExpression.isEmpty()) {
             ArithmeticElement curElement = postfixExpression.removeFirst();
 
             if (curElement instanceof ArithmeticOperand) {
-                stack.push(((ArithmeticOperand) curElement).getOperand());
+                stack.push(((ArithmeticOperand) curElement));
             } else {
                 char ch = ((ArithmeticOperator) curElement).getOperator().charAt(0);
-                Number second = stack.pop();
-                Number first = stack.pop();
+                ArithmeticOperand second = stack.pop();
+                ArithmeticOperand first = stack.pop();
+                if (!arithmeticValidator.validate(String.valueOf(ch), first, second)) {
+                    return;
+                }
+
                 switch (ch) {
                     case '+':
-                        int r = first.intValue() + second.intValue();
-                        if (r > max.intValue()) {
-                            log.debug("加法结果{}不能大于最大值{}", r, max.intValue());
-                            this.valid = false;
-                            return;
-                        }
-                        stack.push(r);
+                        stack.push(first.add(second));
                         break;
                     case '-':
-                        r = first.intValue() - second.intValue();
-                        if (r < 0) {
-                            log.debug("减法结果不能为负数");
-                            this.valid = false;
-                            return;
-                        }
-                        stack.push(r);
+                        stack.push(first.subtract(second));
                         break;
                     case 'x':
-                        stack.push(first.intValue() * second.intValue());
+                        stack.push(first.multiple(second));
                         break;
                     case '÷':
-                        if (0 == second.intValue()) {
-                            log.debug("除数不能为0");
-                            this.valid = false;
-                            return;
-                        }
-
-                        if (first.intValue() % second.intValue() != 0) {
-                            log.debug("除法不能整除，{}, {}", first.intValue(), second.intValue());
-                            this.valid = false;
-                            return;
-                        }
-
-                        stack.push(first.intValue() / second.intValue());
+                        stack.push(first.divide(second));
                         break;
                 }
             }
         }
-        this.result = new ArithmeticOperand(stack.pop());
+        this.result = new ArithmeticInt(stack.pop().intValue());
         this.valid = true;
         log.debug("result: {}", this.result.getOperand());
     }

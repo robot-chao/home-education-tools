@@ -22,4 +22,12 @@ class ArithmeticBuilderTest {
             log.info(arithmetic.toString());
         }
     }
+
+    @Test
+    void testFloatBuilder() {
+        List<Arithmetic> arithmetics = ArithmeticBuilder.newGradeFourBuilder(2, 2).build(30);
+        for (Arithmetic arithmetic : arithmetics) {
+            log.info(arithmetic.toString());
+        }
+    }
 }
