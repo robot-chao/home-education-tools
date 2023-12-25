@@ -36,6 +36,8 @@ public class Arithmetic {
 
     private Number min = 5;
 
+    private String midExpression;
+
     public Arithmetic(int opNum, ArithmeticOperandGenerator operandGenerator,
                       int operatorType, boolean parentheses, ArithmeticValidator arithmeticValidator) {
         int retry = 0;
@@ -51,6 +53,8 @@ public class Arithmetic {
             log.error("超过最大重试次数");
             throw new RuntimeException("超过最大重试次数");
         }
+
+        this.midExpression = toString();
     }
 
     public Arithmetic(String arithmetic) {
@@ -113,6 +117,8 @@ public class Arithmetic {
             builder.delete(0, builder.length());
         }
         this.calcAndCheckArithmetic(ArithmeticValidator.intValidator(20));
+
+        this.midExpression = toString();
     }
 
     private void calcAndCheckArithmetic(ArithmeticValidator arithmeticValidator) {
@@ -248,6 +254,8 @@ public class Arithmetic {
 
     @Override
     public String toString() {
+        if (null != this.midExpression) return this.midExpression;
+
         StringBuilder builder = new StringBuilder();
 
         List<ArithmeticElement> elementList = mergeElements();
@@ -343,5 +351,18 @@ public class Arithmetic {
         }
 
         return stack2;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Arithmetic that = (Arithmetic) o;
+        return Objects.equals(that.toString(), toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(toString());
     }
 }

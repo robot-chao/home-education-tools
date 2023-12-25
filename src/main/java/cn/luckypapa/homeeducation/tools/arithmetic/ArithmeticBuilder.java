@@ -3,7 +3,9 @@ package cn.luckypapa.homeeducation.tools.arithmetic;
 import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticFloat;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ArithmeticBuilder {
 
@@ -19,14 +21,18 @@ public class ArithmeticBuilder {
     }
 
     public List<Arithmetic> build(int count) {
-        List<Arithmetic> arithmetics = new ArrayList<>(count);
-        for (int i = 0; i < count; i++) {
-            arithmetics.add(new Arithmetic(this.opNum,
+        Set<Arithmetic> arithmetics = new HashSet<>(count);
+        for (int i = 0; i < count;) {
+            Arithmetic arithmetic = new Arithmetic(this.opNum,
                     arithmeticOperandGenerator,
-                    operatorType, parentheses, arithmeticValidator));
+                    operatorType, parentheses, arithmeticValidator);
+            if (!arithmetics.contains(arithmetic)) {
+                arithmetics.add(arithmetic);
+                i ++;
+            }
         }
 
-        return arithmetics;
+        return new ArrayList<>(arithmetics);
     }
 
     public static ArithmeticBuilder newGradeOneBuilder(int opNum) {
