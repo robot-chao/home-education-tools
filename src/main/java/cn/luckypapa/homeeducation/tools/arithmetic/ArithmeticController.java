@@ -129,7 +129,7 @@ public class ArithmeticController {
     public void generate3(HttpServletResponse response,
                           @RequestParam(name = "opCount") int opCount,
                           @RequestParam(name = "pageCount") int pageCount,
-                          @RequestParam(name = "type") int type) throws Exception {
+                          @RequestParam(name = "type", required = false, defaultValue = "1") int type) throws Exception {
         if (opCount < 1) opCount = 1;
         if (opCount > 5) opCount = 2;
         if (type < 1 || type > 2) type = 1;
