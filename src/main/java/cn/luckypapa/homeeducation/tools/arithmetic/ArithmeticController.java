@@ -132,7 +132,7 @@ public class ArithmeticController {
                           @RequestParam(name = "type", required = false, defaultValue = "1") int type) throws Exception {
         if (opCount < 1) opCount = 1;
         if (opCount > 5) opCount = 2;
-        if (type < 1 || type > 2) type = 1;
+        if (type < 1 || type > 3) type = 1;
         if (pageCount < 2 || pageCount > 10) pageCount = 2;
 
         List<Arithmetic> arithmetics = null;
