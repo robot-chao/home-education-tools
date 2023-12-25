@@ -154,6 +154,9 @@ public class ArithmeticController {
         // 单位为英寸 1英寸=2.54厘米
         sheet.setMargin(HSSFSheet.BottomMargin, 0.8);
         sheet.setMargin(HSSFSheet.TopMargin, 0.8);
+        sheet.setMargin(HSSFSheet.LeftMargin, 0.4);
+        sheet.setMargin(HSSFSheet.RightMargin, 0.4);
+
         // 设置要导出的文件的名字
         String fileName = "四则运算.xls";
 
@@ -164,7 +167,7 @@ public class ArithmeticController {
             //新建font实体
             HSSFFont hssfFont = workbook.createFont();
             //字体大小
-            hssfFont.setFontHeightInPoints((short)14);
+            hssfFont.setFontHeightInPoints((short)12);
             hssfFont.setFontName("微软雅黑");
             cellStyle.setFont(hssfFont);
             cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
