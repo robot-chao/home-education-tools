@@ -1,6 +1,11 @@
 package cn.luckypapa.homeeducation.tools.arithmetic;
 
+import cn.luckypapa.homeeducation.tools.arithmetic.generator.ArithmeticFloatGenerator;
+import cn.luckypapa.homeeducation.tools.arithmetic.generator.ArithmeticFractionGenerator;
+import cn.luckypapa.homeeducation.tools.arithmetic.generator.ArithmeticIntGenerator;
+import cn.luckypapa.homeeducation.tools.arithmetic.generator.ArithmeticOperandGenerator;
 import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticFloat;
+import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticFraction;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -48,6 +53,14 @@ public class ArithmeticBuilder {
         builder.opNum = opNum;
         builder.arithmeticOperandGenerator = new ArithmeticFloatGenerator(20, 0, floatCount);
         builder.arithmeticValidator = ArithmeticValidator.floatValidator(new ArithmeticFloat(2000, floatCount));
+        return builder;
+    }
+
+    public static ArithmeticBuilder newGradeThreeBuilder(int opNum) {
+        ArithmeticBuilder builder = new ArithmeticBuilder();
+        builder.opNum = opNum;
+        builder.arithmeticOperandGenerator = new ArithmeticFractionGenerator(1, 10);
+        builder.arithmeticValidator = ArithmeticValidator.fractionValidator(new ArithmeticFraction(2, 1));
         return builder;
     }
 }

@@ -1,5 +1,6 @@
 package cn.luckypapa.homeeducation.tools.arithmetic;
 
+import cn.luckypapa.homeeducation.tools.arithmetic.generator.ArithmeticIntGenerator;
 import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticOperand;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

@@ -1,4 +1,4 @@
-package cn.luckypapa.homeeducation.tools.arithmetic;
+package cn.luckypapa.homeeducation.tools.arithmetic.generator;
 
 import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticFloat;
 import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticOperand;

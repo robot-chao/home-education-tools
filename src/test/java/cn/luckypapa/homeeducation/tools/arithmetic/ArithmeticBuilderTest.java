@@ -30,4 +30,12 @@ class ArithmeticBuilderTest {
             log.info(arithmetic.toString());
         }
     }
+
+    @Test
+    void testFractionBuilder() {
+        List<Arithmetic> arithmetics = ArithmeticBuilder.newGradeThreeBuilder(2).build(30);
+        for (Arithmetic arithmetic : arithmetics) {
+            log.info(arithmetic.toString());
+        }
+    }
 }

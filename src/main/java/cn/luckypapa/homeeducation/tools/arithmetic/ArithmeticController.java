@@ -138,8 +138,10 @@ public class ArithmeticController {
         List<Arithmetic> arithmetics = null;
         if (type == 1) {
             arithmetics = ArithmeticBuilder.newGradeOneBuilder(opCount).build(30 * pageCount);
-        } else {
+        } else if (type == 2) {
             arithmetics = ArithmeticBuilder.newGradeFourBuilder(opCount, 2).build(30 * pageCount);
+        } else {
+            arithmetics = ArithmeticBuilder.newGradeThreeBuilder(opCount).build(30 * pageCount);
         }
 
         render2Excel(response, arithmetics, pageCount);

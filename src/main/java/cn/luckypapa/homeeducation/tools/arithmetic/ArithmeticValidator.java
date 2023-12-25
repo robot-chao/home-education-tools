@@ -1,6 +1,7 @@
 package cn.luckypapa.homeeducation.tools.arithmetic;
 
 import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticFloat;
+import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticFraction;
 import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticInt;
 import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticOperand;
 import cn.luckypapa.homeeducation.tools.arithmetic.rules.*;
@@ -54,6 +55,15 @@ public class ArithmeticValidator {
         List<ArithmeticValidRule> rules = new ArrayList<>();
         rules.add(new ArithmeticAddValidRule(max));
         rules.add(new ArithmeticSubtractValidRule(new ArithmeticFloat(0,0)));
+        rules.add(new ArithmeticDivideValidRule());
+
+        return new ArithmeticValidator(rules);
+    }
+
+    public static ArithmeticValidator fractionValidator(ArithmeticFraction max) {
+        List<ArithmeticValidRule> rules = new ArrayList<>();
+        rules.add(new ArithmeticAddValidRule(max));
+        rules.add(new ArithmeticSubtractValidRule(new ArithmeticFraction(0, 1)));
         rules.add(new ArithmeticDivideValidRule());
 
         return new ArithmeticValidator(rules);
