@@ -148,9 +148,9 @@ public class ArithmeticController {
     private void render2Excel(HttpServletResponse response, List<Arithmetic> arithmetics, int pageCount) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("四则运算");
-        sheet.setColumnWidth(0, 28*256);
-        sheet.setColumnWidth(1, 28*256);
-        sheet.setColumnWidth(2, 28*256);
+        sheet.setColumnWidth(0, 35*256);
+        sheet.setColumnWidth(1, 35*256);
+        sheet.setColumnWidth(2, 35*256);
         // 单位为英寸 1英寸=2.54厘米
         sheet.setMargin(HSSFSheet.BottomMargin, 0.8);
         sheet.setMargin(HSSFSheet.TopMargin, 0.8);
