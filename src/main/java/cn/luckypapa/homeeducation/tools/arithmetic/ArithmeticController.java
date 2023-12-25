@@ -154,8 +154,8 @@ public class ArithmeticController {
         // 单位为英寸 1英寸=2.54厘米
         sheet.setMargin(HSSFSheet.BottomMargin, 0.8);
         sheet.setMargin(HSSFSheet.TopMargin, 0.8);
-        sheet.setMargin(HSSFSheet.LeftMargin, 0.4);
-        sheet.setMargin(HSSFSheet.RightMargin, 0.4);
+        sheet.setMargin(HSSFSheet.LeftMargin, 0.3);
+        sheet.setMargin(HSSFSheet.RightMargin, 0.3);
 
         // 设置要导出的文件的名字
         String fileName = "四则运算.xls";
