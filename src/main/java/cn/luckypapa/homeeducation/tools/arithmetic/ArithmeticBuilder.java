@@ -1,9 +1,6 @@
 package cn.luckypapa.homeeducation.tools.arithmetic;
 
-import cn.luckypapa.homeeducation.tools.arithmetic.generator.ArithmeticFloatGenerator;
-import cn.luckypapa.homeeducation.tools.arithmetic.generator.ArithmeticFractionGenerator;
-import cn.luckypapa.homeeducation.tools.arithmetic.generator.ArithmeticIntGenerator;
-import cn.luckypapa.homeeducation.tools.arithmetic.generator.ArithmeticOperandGenerator;
+import cn.luckypapa.homeeducation.tools.arithmetic.generator.*;
 import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticFloat;
 import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticFraction;
 
@@ -15,11 +12,10 @@ import java.util.Set;
 public class ArithmeticBuilder {
 
     private int opNum = 1;
-    private ArithmeticOperandType operandType = ArithmeticOperandType.INT;
-    private int operatorType = 1;
     private boolean parentheses = false;
     private ArithmeticValidator arithmeticValidator;
     private ArithmeticOperandGenerator arithmeticOperandGenerator;
+    private ArithmeticOperatorGenerator arithmeticOperatorGenerator = ArithmeticOperatorGenerator.gradeOneOperatorGenerator();
 
     public ArithmeticBuilder() {
 
@@ -30,7 +26,7 @@ public class ArithmeticBuilder {
         for (int i = 0; i < count;) {
             Arithmetic arithmetic = new Arithmetic(this.opNum,
                     arithmeticOperandGenerator,
-                    operatorType, parentheses, arithmeticValidator);
+                    arithmeticOperatorGenerator, parentheses, arithmeticValidator);
             if (!arithmetics.contains(arithmetic)) {
                 arithmetics.add(arithmetic);
                 i ++;
@@ -45,6 +41,15 @@ public class ArithmeticBuilder {
         builder.opNum = opNum;
         builder.arithmeticOperandGenerator = new ArithmeticIntGenerator(20, 5);
         builder.arithmeticValidator = ArithmeticValidator.intValidator(20);
+        return builder;
+    }
+
+    public static ArithmeticBuilder newGradeOneSingleTypeBuilder(int opNum, ArithmeticOperator operator) {
+        ArithmeticBuilder builder = new ArithmeticBuilder();
+        builder.opNum = opNum;
+        builder.arithmeticOperandGenerator = new ArithmeticIntGenerator(20, 5);
+        builder.arithmeticValidator = ArithmeticValidator.intValidator(20);
+        builder.arithmeticOperatorGenerator = new SingleTypeOperatorGenerator(operator);
         return builder;
     }
 

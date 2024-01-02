@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 @Getter
-public class ArithmeticOperator implements ArithmeticElement{
+public class ArithmeticOperator implements ArithmeticElement {
     public static final ArithmeticOperator PLUS = new ArithmeticOperator("+", 0);
     public static final ArithmeticOperator MINUS = new ArithmeticOperator("-", 0);
     public static final ArithmeticOperator MULTI = new ArithmeticOperator("x", 1);

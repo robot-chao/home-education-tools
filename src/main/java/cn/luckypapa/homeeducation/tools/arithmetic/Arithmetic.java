@@ -1,6 +1,7 @@
 package cn.luckypapa.homeeducation.tools.arithmetic;
 
 import cn.luckypapa.homeeducation.tools.arithmetic.generator.ArithmeticOperandGenerator;
+import cn.luckypapa.homeeducation.tools.arithmetic.generator.ArithmeticOperatorGenerator;
 import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticInt;
 import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticOperand;
 import lombok.Getter;
@@ -40,11 +41,11 @@ public class Arithmetic {
     private String midExpression;
 
     public Arithmetic(int opNum, ArithmeticOperandGenerator operandGenerator,
-                      int operatorType, boolean parentheses, ArithmeticValidator arithmeticValidator) {
+                      ArithmeticOperatorGenerator operatorGenerator, boolean parentheses, ArithmeticValidator arithmeticValidator) {
         int retry = 0;
         while (!this.valid && retry ++ < MAX_RETRY_COUNT) {
             this.operands = operandGenerator.generate(opNum + 1);
-            this.operators = ArithmeticOperator.random(opNum, operatorType);
+            this.operators = operatorGenerator.generate(opNum);
             if (parentheses)    this.insertParentheses();
             log.debug("expression: {}", this);
             this.calcAndCheckArithmetic(arithmeticValidator);

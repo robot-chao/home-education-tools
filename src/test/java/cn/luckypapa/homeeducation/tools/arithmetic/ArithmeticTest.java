@@ -1,6 +1,7 @@
 package cn.luckypapa.homeeducation.tools.arithmetic;
 
 import cn.luckypapa.homeeducation.tools.arithmetic.generator.ArithmeticIntGenerator;
+import cn.luckypapa.homeeducation.tools.arithmetic.generator.ArithmeticOperatorGenerator;
 import cn.luckypapa.homeeducation.tools.arithmetic.operand.ArithmeticOperand;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +16,8 @@ class ArithmeticTest {
         ArithmeticIntGenerator intGenerator = new ArithmeticIntGenerator(20, 5);
         int count = 0;
         for (int i = 0; i < 1000; i++) {
-            Arithmetic arithmetic = new Arithmetic(2, intGenerator, 1, true,
+            Arithmetic arithmetic = new Arithmetic(2, intGenerator,
+                    ArithmeticOperatorGenerator.gradeOneOperatorGenerator(), true,
                     ArithmeticValidator.intValidator(20));
             // log.info("表达式: {}，是否有效：{}", arithmetic, arithmetic.isValid());
             if (arithmetic.isValid()) {
@@ -27,7 +29,8 @@ class ArithmeticTest {
         log.info("{} of 1000 is valid", count);
         count = 0;
         for (int i = 0; i < 10000; i++) {
-            Arithmetic arithmetic = new Arithmetic(5, intGenerator, 2, true,
+            Arithmetic arithmetic = new Arithmetic(5, intGenerator,
+                    ArithmeticOperatorGenerator.gradeThreeOperatorGenerator(), true,
                     ArithmeticValidator.intValidator(20));
             // log.info("表达式: {}，是否有效：{}", arithmetic, arithmetic.isValid());
             if (arithmetic.isValid()) {
@@ -43,7 +46,8 @@ class ArithmeticTest {
     void testToPostfixExpressionLoop() {
         ArithmeticIntGenerator intGenerator = new ArithmeticIntGenerator(20, 5);
         for (int i = 0; i < 100; i++) {
-            Arithmetic arithmetic = new Arithmetic(5, intGenerator, 2, true,
+            Arithmetic arithmetic = new Arithmetic(5, intGenerator,
+                    ArithmeticOperatorGenerator.gradeThreeOperatorGenerator(), true,
                     ArithmeticValidator.intValidator(20));
             log.debug(arithmetic.toString());
             Deque<ArithmeticElement> postfixExpression = arithmetic.toPostfixExpression();
