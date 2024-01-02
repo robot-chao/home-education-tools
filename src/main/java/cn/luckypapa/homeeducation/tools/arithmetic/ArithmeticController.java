@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -143,10 +144,12 @@ public class ArithmeticController {
         } else if (type == 3) {
             arithmetics = ArithmeticBuilder.newGradeThreeBuilder(opCount).build(30 * pageCount);
         } else if (type == 4) {
+            arithmetics = new ArrayList<>(30 * pageCount);
             for (int i = 0; i < pageCount; i++) {
                 arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.MINUS).build(30));
             }
         } else {
+            arithmetics = new ArrayList<>(30 * pageCount);
             for (int i = 0; i < pageCount; i++) {
                 arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.PLUS).build(30));
             }
