@@ -143,10 +143,13 @@ public class ArithmeticController {
         } else if (type == 3) {
             arithmetics = ArithmeticBuilder.newGradeThreeBuilder(opCount).build(30 * pageCount);
         } else if (type == 4) {
-            arithmetics = ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.MINUS).build(30 * pageCount);
+            for (int i = 0; i < pageCount; i++) {
+                arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.MINUS).build(30));
+            }
         } else {
-            log.info("opCount: {}, pageCount: {}, type: {}", opCount, pageCount, type);
-            arithmetics = ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.PLUS).build(30 * pageCount);
+            for (int i = 0; i < pageCount; i++) {
+                arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.PLUS).build(30));
+            }
         }
 
         render2Excel(response, arithmetics, pageCount);
