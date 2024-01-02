@@ -21,6 +21,11 @@ class ArithmeticBuilderTest {
         for (Arithmetic arithmetic : arithmetics) {
             log.info(arithmetic.toString());
         }
+
+        arithmetics = ArithmeticBuilder.newGradeOneSingleTypeBuilder(2, ArithmeticOperator.PLUS).build(30);
+        for (Arithmetic arithmetic : arithmetics) {
+            log.info(arithmetic.toString());
+        }
     }
 
     @Test

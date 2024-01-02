@@ -145,6 +145,7 @@ public class ArithmeticController {
         } else if (type == 4) {
             arithmetics = ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.MINUS).build(30 * pageCount);
         } else {
+            log.info("opCount: {}, pageCount: {}, type: {}", opCount, pageCount, type);
             arithmetics = ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.PLUS).build(30 * pageCount);
         }
 
@@ -152,6 +153,7 @@ public class ArithmeticController {
     }
 
     private void render2Excel(HttpServletResponse response, List<Arithmetic> arithmetics, int pageCount) throws IOException {
+        log.info("render2Excel: {}", arithmetics.size());
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("四则运算");
         sheet.setColumnWidth(0, 35*256);
