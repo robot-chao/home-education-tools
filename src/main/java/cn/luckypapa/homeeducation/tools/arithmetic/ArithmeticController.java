@@ -133,7 +133,7 @@ public class ArithmeticController {
                           @RequestParam(name = "type", required = false, defaultValue = "1") int type) throws Exception {
         if (opCount < 1) opCount = 1;
         if (opCount > 5) opCount = 2;
-        if (type < 1 || type > 5) type = 1;
+        if (type < 1 || type > 6) type = 1;
         if (pageCount < 2 || pageCount > 10) pageCount = 2;
 
         List<Arithmetic> arithmetics = null;
@@ -148,10 +148,16 @@ public class ArithmeticController {
             for (int i = 0; i < pageCount; i++) {
                 arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.MINUS).build(30));
             }
-        } else {
+        } else if (type == 5) {
             arithmetics = new ArrayList<>(30 * pageCount);
             for (int i = 0; i < pageCount; i++) {
                 arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.PLUS).build(30));
+            }
+        } else {
+            arithmetics = new ArrayList<>(30 * pageCount);
+            for (int i = 0; i < pageCount; i++) {
+                arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.PLUS).build(15));
+                arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.MINUS).build(15));
             }
         }
 
