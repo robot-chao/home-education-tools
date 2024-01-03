@@ -27,53 +27,5 @@
     <li>
         分数连加连减试题30道<a href="/arithmetic/generate3?opCount=2&pageCount=2&type=3">下载</a>
     </li>
-    <br />
-    <hr />
-    <br />
-    <form id="genPaper" method="get" action="/arithmetic/generate2">
-        <label>选择试卷类型：</label>
-        <select name="paperType">
-            <option value="1">只填算式结果</option>
-            <option value="2">填加减数</option>
-        </select>
-        <br/>
-        <label>计算符数量：</label>
-        <select name="opNum">
-            <option value="1">1个</option>
-            <option value="2">2个</option>
-        </select>
-        <br />
-        <label>最大计算数的值：</label>
-        <input type="text" name="max" value="20" />
-        <br />
-        <label>最小计算数的值：</label>
-        <input type="text" name="min" value="5" />
-        <br />
-        <label>试卷数量：</label>
-        <input type="text" name="paperCount" value="2" />
-        <br />
-        <label>每张试卷试题数：</label>
-        <input type="text" name="itemCountPerPaper" value="30" />
-        <br />
-        <input type="button" onclick="javascript:clickGenPaper()" value="提交">
-    </form>
-
-    <script>
-        function clickGenPaper() {
-            let paperType = document.getElementsByName("paperType");
-            let opNum = document.getElementsByName("opNum");
-            let max = document.getElementsByName("max");
-            let min = document.getElementsByName("min");
-            let paperCount = document.getElementsByName("paperCount");
-            let itemCountPerPaper = document.getElementsByName("itemCountPerPaper");
-            let pyArgs = opNum + ',' + max + ',' + min + ',' + itemCountPerPaper + ',' + paperCount;
-
-            let actionUrl = "/arithmetic/generate2?paperType=" + paperType + "&pyArgs=" + pyArgs;
-
-            let genPaper = document.getElementById("genPaper");
-            genPaper.action = actionUrl;
-            genPaper.submit();
-        }
-    </script>
 </body>
 </html>
