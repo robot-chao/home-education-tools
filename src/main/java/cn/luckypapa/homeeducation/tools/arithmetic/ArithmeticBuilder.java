@@ -39,7 +39,7 @@ public class ArithmeticBuilder {
     public static ArithmeticBuilder newGradeOneBuilder(int opNum) {
         ArithmeticBuilder builder = new ArithmeticBuilder();
         builder.opNum = opNum;
-        builder.arithmeticOperandGenerator = new ArithmeticIntGenerator(20, 5);
+        builder.arithmeticOperandGenerator = new ArithmeticIntGenerator(20, 2);
         builder.arithmeticValidator = ArithmeticValidator.intValidator(20);
         return builder;
     }
@@ -47,7 +47,7 @@ public class ArithmeticBuilder {
     public static ArithmeticBuilder newGradeOneSingleTypeBuilder(int opNum, ArithmeticOperator operator) {
         ArithmeticBuilder builder = new ArithmeticBuilder();
         builder.opNum = opNum;
-        builder.arithmeticOperandGenerator = new ArithmeticIntGenerator(20, 5);
+        builder.arithmeticOperandGenerator = new ArithmeticIntGenerator(20, 2);
         builder.arithmeticValidator = ArithmeticValidator.intValidator(20);
         builder.arithmeticOperatorGenerator = new SingleTypeOperatorGenerator(operator);
         return builder;
