@@ -153,11 +153,17 @@ public class ArithmeticController {
             for (int i = 0; i < pageCount; i++) {
                 arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.PLUS).build(30));
             }
-        } else {
+        } else if (type == 6) {
             arithmetics = new ArrayList<>(30 * pageCount);
             for (int i = 0; i < pageCount; i++) {
                 arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.PLUS).build(15));
                 arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.MINUS).build(15));
+            }
+        } else {
+            arithmetics = new ArrayList<>(30 * pageCount);
+            for (int i = 0; i < pageCount; i++) {
+                arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.PLUS, 100, 5).build(15));
+                arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.MINUS, 100, 5).build(15));
             }
         }
 

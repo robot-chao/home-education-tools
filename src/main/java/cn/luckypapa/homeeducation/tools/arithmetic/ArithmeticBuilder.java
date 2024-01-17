@@ -45,14 +45,17 @@ public class ArithmeticBuilder {
     }
 
     public static ArithmeticBuilder newGradeOneSingleTypeBuilder(int opNum, ArithmeticOperator operator) {
+        return newGradeOneSingleTypeBuilder(opNum, operator, 20, 2);
+    }
+
+    public static ArithmeticBuilder newGradeOneSingleTypeBuilder(int opNum, ArithmeticOperator operator,int max, int min) {
         ArithmeticBuilder builder = new ArithmeticBuilder();
         builder.opNum = opNum;
-        builder.arithmeticOperandGenerator = new ArithmeticIntGenerator(20, 2);
-        builder.arithmeticValidator = ArithmeticValidator.intValidator(20);
+        builder.arithmeticOperandGenerator = new ArithmeticIntGenerator(max, min);
+        builder.arithmeticValidator = ArithmeticValidator.intValidator(max);
         builder.arithmeticOperatorGenerator = new SingleTypeOperatorGenerator(operator);
         return builder;
     }
-
     public static ArithmeticBuilder newGradeFourBuilder(int opNum, int floatCount) {
         ArithmeticBuilder builder = new ArithmeticBuilder();
         builder.opNum = opNum;
