@@ -133,7 +133,7 @@ public class ArithmeticController {
                           @RequestParam(name = "type", required = false, defaultValue = "1") int type) throws Exception {
         if (opCount < 1) opCount = 1;
         if (opCount > 5) opCount = 2;
-        if (type < 1 || type > 7) type = 1;
+        if (type < 1 || type > 9) type = 1;
         if (pageCount < 2 || pageCount > 10) pageCount = 2;
 
         List<Arithmetic> arithmetics = null;
@@ -159,12 +159,16 @@ public class ArithmeticController {
                 arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.PLUS).build(15));
                 arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.MINUS).build(15));
             }
-        } else {
+        } else if (type == 7) {
             arithmetics = new ArrayList<>(30 * pageCount);
             for (int i = 0; i < pageCount; i++) {
                 arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.PLUS, 100, 5).build(15));
                 arithmetics.addAll(ArithmeticBuilder.newGradeOneSingleTypeBuilder(opCount, ArithmeticOperator.MINUS, 100, 5).build(15));
             }
+        } else {
+            arithmetics = new ArrayList<>(60);
+            arithmetics.addAll(ArithmeticBuilder.newGradeOneBuilder(2).build(30));
+            arithmetics.addAll(ArithmeticBuilder.newGradeOneBuilder(1, 100, 5).build(30));
         }
 
         render2Excel(response, arithmetics, pageCount);

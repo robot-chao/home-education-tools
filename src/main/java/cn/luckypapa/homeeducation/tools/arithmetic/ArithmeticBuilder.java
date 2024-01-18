@@ -37,10 +37,14 @@ public class ArithmeticBuilder {
     }
 
     public static ArithmeticBuilder newGradeOneBuilder(int opNum) {
+        return newGradeOneBuilder(opNum, 20, 2);
+    }
+
+    public static ArithmeticBuilder newGradeOneBuilder(int opNum, int max, int min) {
         ArithmeticBuilder builder = new ArithmeticBuilder();
         builder.opNum = opNum;
-        builder.arithmeticOperandGenerator = new ArithmeticIntGenerator(20, 2);
-        builder.arithmeticValidator = ArithmeticValidator.intValidator(20);
+        builder.arithmeticOperandGenerator = new ArithmeticIntGenerator(max, min);
+        builder.arithmeticValidator = ArithmeticValidator.intValidator(max);
         return builder;
     }
 
